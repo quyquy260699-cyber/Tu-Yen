@@ -12,7 +12,6 @@
       --accent: #6b9080;
       --accent-light: #a4c3a2;
       --card: #fff;
-      --shadow: rgba(107, 144, 128, 0.15);
     }
     body { background: var(--bg); color: var(--text); line-height: 1.8; padding: 20px; max-width: 900px; margin: 0 auto; }
     header { text-align: center; padding: 40px 20px; border-bottom: 1px solid var(--accent-light); margin-bottom: 40px; }
@@ -21,39 +20,33 @@
     .filter-bar { text-align: center; margin-bottom: 30px; }
     .filter-btn {
       background: transparent; border: 1px solid var(--accent); color: var(--accent);
-      padding: 6px 16px; margin: 4px; border-radius: 20px; cursor: pointer; transition: 0.2s;
+      padding: 6px 16px; margin: 4px; border-radius: 20px; cursor: pointer;
     }
     .filter-btn:hover, .filter-btn.active { background: var(--accent); color: white; }
     .search-box { text-align: center; margin-bottom: 30px; }
     #search-input {
       padding: 10px 16px; width: 100%; max-width: 400px; border: 1px solid var(--accent-light);
-      border-radius: 25px; font-size: 1rem; background: white;
+      border-radius: 25px; font-size: 1rem;
     }
-    .posts-container { display: flex; flex-direction: column; gap: 30px; }
     .post-card {
-      background: var(--card); border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px var(--shadow);
-      transition: transform 0.2s;
+      background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(107,144,128,0.15);
+      border-left: 4px solid var(--accent);
     }
-    .post-card:hover { transform: translateY(-3px); }
-    .post-card.featured { border-left: 4px solid var(--accent); }
-    .post-image { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 18px; display: none; }
-    .post-image.show { display: block; }
     .post-title { font-size: 1.4rem; color: var(--accent); margin-bottom: 8px; }
     .post-meta { font-size: 0.9rem; color: #888; margin-bottom: 15px; }
     .post-excerpt { color: #555; margin-bottom: 15px; }
-    .post-full { display: none; white-space: pre-line; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--accent-light); }
-    .post-full.show { display: block; }
     .read-more {
       background: transparent; border: none; color: var(--accent); cursor: pointer;
       font-weight: 600; padding: 5px 0;
     }
-    .read-more:hover { text-decoration: underline; }
+    .post-full { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--accent-light); }
+    .post-full.show { display: block; }
+    .post-full p { margin-bottom: 1em; text-align: justify; }
     .author-section {
       margin-top: 60px; padding: 30px; background: white; border-radius: 12px; text-align: center;
     }
-    .author-name { font-size: 1.3rem; color: var(--accent); margin-bottom: 10px; }
     footer { text-align: center; margin-top: 60px; padding: 20px; color: #888; font-size: 0.9rem; }
-    .empty-state { text-align: center; padding: 40px; color: #888; }
   </style>
 </head>
 <body>
@@ -67,30 +60,28 @@
   </div>
 
   <div class="filter-bar" id="filter-container"></div>
-  <div class="posts-container" id="posts-container"></div>
+  <div id="posts-container"></div>
 
   <section class="author-section">
-    <h3 class="author-name">Tác giả</h3>
-    <p>Người con xa quê, luôn mang trong mình nỗi nhớ về quê hương và những bình dị ngày thơ. Viết để lưu giữ, để chia sẻ, để tìm lại một phần chính mình trong từng câu chữ.</p>
+    <h3 style="color: #6b9080; margin-bottom: 10px;">Tác giả</h3>
+    <p>Người con xa quê, luôn mang trong mình nỗi nhớ về quê hương và những bình dị ngày thơ.</p>
   </section>
 
   <footer>
-    <p>© 2025 Tủ Yên — Giữ gìn những nét đẹp quê hương</p>
+    <p>© 2025 Tủ Yên</p>
   </footer>
 
   <script>
-    // ===== DANH SÁCH CHUYÊN MỤC =====
     const categories = {
-      all: { label: 'Tất cả', color: '#6b9080' },
-      tanvan: { label: 'Tản văn', color: '#6b9080' },
-      doisong: { label: 'Đời sống', color: '#8fa874' },
-      tuybut: { label: 'Tùy bút', color: '#b4a76c' },
-      suynghi: { label: 'Suy nghĩ', color: '#d4a574' },
-      reviewsach: { label: 'Review sách', color: '#a491c2' },
-      dulich: { label: 'Du lịch', color: '#7fb3d5' }
+      all: 'Tất cả',
+      tanvan: 'Tản văn',
+      doisong: 'Đời sống',
+      tuybut: 'Tùy bút',
+      suynghi: 'Suy nghĩ',
+      reviewsach: 'Review sách',
+      dulich: 'Du lịch'
     };
 
-    // ===== DANH SÁCH BÀI VIẾT =====
     const posts = [
       {
         cat: 'tanvan',
@@ -100,96 +91,85 @@
         featured: true,
         image: '',
         excerpt: 'Thời đại nhà nhà tân tiến, người người hướng đến giá trị văn minh, những người trẻ mang trong mình hoài bão lớn lao, ai cũng mong muốn được thoát xác, đi đến những chân trời mới lạ để định vị bản thân.',
-        full: `Bị đánh thức bởi tiếng kêu của mẹ, tôi gắng gượng bước khỏi giường khi mặt trời còn "đang ngủ", thẫn thờ bước ra nhà sau với vẻ mặt ngái ngủ. Hôm nay, ba cũng đi làm từ sớm nên tôi thay phần ba phụ mẹ nấu bún riêu và đẩy xe ra chợ bán.
-
-Cái nghề này nuôi sống gia đình tôi áng chừng chỉ khoảng 10 năm nay. Trước đó, mẹ cũng buôn bán nhưng là những mặt hàng làm đỡ cực hơn như xôi vò, chuối nướng, chè, sâm… Có một khoảng thời gian, ba mẹ theo bà con đi làm ăn xa đến khi quay về thì người khác đã dành hết mối. Mẹ học nấu bún riêu và bám trụ đến bây giờ. Năm ngoái, còn bày thêm bún cá nhưng thấy cực quá nên tôi bảo nghỉ, bán một món thôi cho đỡ cực.
-
-Chuông báo thức reo 3 giờ 30 sáng, đều đặn mỗi ngày thay cho tiếng gà đánh thức mẹ dậy bắt tay vào việc. Chủ yếu là công đoạn nấu nước lèo, cân đo đong đếm để nêm nếm cho đúng khẩu vị như thường lệ. Hồi đó, trước nhà có cô kia bán cháo lòng nhưng tùy hứng lắm. Hôm nào rộng rãi thì cho nhiều đường, muối, bột ngọt, hạt nêm. Khi nào không vui thì nêm ít đi một chút. Nói chung là theo kiểu "nghe ông bà mách bảo là vừa miệng". Mẹ không thích như vậy, hay nói "bán buôn là cái nghề nuôi sống mình nên phải làm ăn cho đàng hoàng. Mình nêm đúng như khẩu vị mà khách khen thì người ta mới quay lại ăn nhiều lần". Một phần vì chủ yếu bán cho dân cư ở chợ và xung quanh khu vực gần nhà nên bà cũng sợ… mang tiếng.
-
-Các công đoạn khác như lặt rau thơm, bào rau muống, phi hành, khử mắm… đã được hoàn tất trong chiều ngày hôm trước. Mỗi chiều tà khi ánh mặt trời còn lấp ló phía xa xa chưa lặn hẳn, phóng tầm mắt ra hướng đồng ruộng thấy một màu hoàng hôn đẹp như tranh vẽ, làn khói từ chái bếp cũng ham chơi, len lỏi vào thiên nhiên tạo nên bức tranh miền quê yên bình đến lạ. Đó là làn khói từ nồi huyết mẹ đang luộc để loại bỏ mùi hôi trước khi cho vào nồi nước lèo sáng sớm. Nhớ hồi nhỏ có lần tôi ăn hủ tiếu ở quán nọ, ăn phải huyết chưa được chế biến kỹ lưỡng. Về nhà, tôi ói mật xanh mật vàng và sợ luôn món này. Mãi về sau, đến khi mẹ tôi mở xe bán bún, tôi mới dám thử lại.
-
-Mẹ hoàn tất các khâu, tôi mới có việc để làm – đẩy xe vào khu chợ. Hình như chỉ có việc này mẹ mới nhờ vả đến ba hoặc tôi vì hồi mới về nhà nội, mẹ trèo thang để lau dọn nhà dịp Tết, bị ngã gãy tay nên có tỳ. Một lần, mẹ giận ba nên tự đẩy xe, đi đường trường còn đỡ nhưng để lên dốc thì cần phải dùng lực mạnh, mẹ bị nhức ngay vết thương cũ. Từ đó về sau, có giận dỗi hay như thế nào cũng ráng xuống nước để đỡ khổ thân.
-
-Quen với nhịp sống đô thị, tôi bất giác ngỡ ngàng khi chưa được 5 giờ sáng mà đường xá đã tấp nập người và xe cộ. Thậm chí còn đông hơn cả khi mặt trời phủ sáng toàn diện. Người thì đẩy xe giống mẹ con tôi, người khệ nệ khuân vác bàn ghế dọn hàng, cô kia chặt thịt heo nghe lụp cụp, chú nọ khiêng thùng cá mới lấy về từ chợ đầu mối, tiếng máy rao hàng, tiếng còi xe, tiếng người chào hỏi luyên thuyên… làm huyên náo cả một vùng quê.
-
-Ở quê người ta họp chợ sớm. Họ bắt đầu lúc hừng đông chưa ló dạng, không thấy rõ mặt người và kết thúc khi ông trời vừa bừng tỉnh dậy. Ai ở thành phố về quen giấc ngủ đến 7, 8 giờ thì xác định ôm bụng đói mà chạy ra chợ lớn mới có đồ ăn.
-
-Thấm thoát đã hết ngày về phép, tôi lại tất bật chuẩn bị để trở lại với cuộc sống cơm áo gạo tiền nơi đất khách. Ở đó phát triển hơn, có đầy đủ mọi thứ nhưng tìm mãi vẫn không thấy được một thoáng hương quê. Thế nên sau này mỗi khi có dịp về quê, tôi lại cố tình dậy sớm để hòa vào nhịp sống đồng bằng, cảm nhận khí trời mát mẻ của buổi bình minh và thả mình vào không gian đầy ồn ào trong buổi trà đạo của các ông, các bà.
-
-"Người bỏ quê hương, chứ bao giờ quê hương bỏ người". Thời đại nhà nhà tân tiến, người người hướng đến giá trị văn minh, những người trẻ mang trong mình hoài bão lớn lao, ai cũng mong muốn được thoát xác, đi đến những chân trời mới lạ để định vị bản thân. Có khi bị cuống vào vòng quay của hào nhoáng, xa hoa, ta trót lỡ đôi lần không còn nhớ đến nơi chôn rau cắt rốn. Nhưng chỉ có người bỏ đất, chứ đất bỏ người sao được. Nhà vẫn ở đấy, đợi ta quay về mỗi khi mỏi mệt.`
+        paragraphs: [
+          'Bị đánh thức bởi tiếng kêu của mẹ, tôi gắng gượng bước khỏi giường khi mặt trời còn "đang ngủ", thẫn thờ bước ra nhà sau với vẻ mặt ngái ngủ. Hôm nay, ba cũng đi làm từ sớm nên tôi thay phần ba phụ mẹ nấu bún riêu và đẩy xe ra chợ bán.',
+          
+          'Cái nghề này nuôi sống gia đình tôi áng chừng chỉ khoảng 10 năm nay. Trước đó, mẹ cũng buôn bán nhưng là những mặt hàng làm đỡ cực hơn như xôi vò, chuối nướng, chè, sâm… Có một khoảng thời gian, ba mẹ theo bà con đi làm ăn xa đến khi quay về thì người khác đã dành hết mối. Mẹ học nấu bún riêu và bám trụ đến bây giờ. Năm ngoái, còn bày thêm bún cá nhưng thấy cực quá nên tôi bảo nghỉ, bán một món thôi cho đỡ cực.',
+          
+          'Chuông báo thức reo 3 giờ 30 sáng, đều đặn mỗi ngày thay cho tiếng gà đánh thức mẹ dậy bắt tay vào việc. Chủ yếu là công đoạn nấu nước lèo, cân đo đong đếm để nêm nếm cho đúng khẩu vị như thường lệ. Hồi đó, trước nhà có cô kia bán cháo lòng nhưng tùy hứng lắm. Hôm nào rộng rãi thì cho nhiều đường, muối, bột ngọt, hạt nêm. Khi nào không vui thì nêm ít đi một chút. Nói chung là theo kiểu "nghe ông bà mách bảo là vừa miệng". Mẹ không thích như vậy, hay nói "bán buôn là cái nghề nuôi sống mình nên phải làm ăn cho đàng hoàng. Mình nêm đúng như khẩu vị mà khách khen thì người ta mới quay lại ăn nhiều lần". Một phần vì chủ yếu bán cho dân cư ở chợ và xung quanh khu vực gần nhà nên bà cũng sợ… mang tiếng.',
+          
+          'Các công đoạn khác như lặt rau thơm, bào rau muống, phi hành, khử mắm… đã được hoàn tất trong chiều ngày hôm trước. Mỗi chiều tà khi ánh mặt trời còn lấp ló phía xa xa chưa lặn hẳn, phóng tầm mắt ra hướng đồng ruộng thấy một màu hoàng hôn đẹp như tranh vẽ, làn khói từ chái bếp cũng ham chơi, len lỏi vào thiên nhiên tạo nên bức tranh miền quê yên bình đến lạ. Đó là làn khói từ nồi huyết mẹ đang luộc để loại bỏ mùi hôi trước khi cho vào nồi nước lèo sáng sớm. Nhớ hồi nhỏ có lần tôi ăn hủ tiếu ở quán nọ, ăn phải huyết chưa được chế biến kỹ lưỡng. Về nhà, tôi ói mật xanh mật vàng và sợ luôn món này. Mãi về sau, đến khi mẹ tôi mở xe bán bún, tôi mới dám thử lại.',
+          
+          'Mẹ hoàn tất các khâu, tôi mới có việc để làm – đẩy xe vào khu chợ. Hình như chỉ có việc này mẹ mới nhờ vả đến ba hoặc tôi vì hồi mới về nhà nội, mẹ trèo thang để lau dọn nhà dịp Tết, bị ngã gãy tay nên có tỳ. Một lần, mẹ giận ba nên tự đẩy xe, đi đường trường còn đỡ nhưng để lên dốc thì cần phải dùng lực mạnh, mẹ bị nhức ngay vết thương cũ. Từ đó về sau, có giận dỗi hay như thế nào cũng ráng xuống nước để đỡ khổ thân.',
+          
+          'Quen với nhịp sống đô thị, tôi bất giác ngỡ ngàng khi chưa được 5 giờ sáng mà đường xá đã tấp nập người và xe cộ. Thậm chí còn đông hơn cả khi mặt trời phủ sáng toàn diện. Người thì đẩy xe giống mẹ con tôi, người khệ nệ khuân vác bàn ghế dọn hàng, cô kia chặt thịt heo nghe lụp cụp, chú nọ khiêng thùng cá mới lấy về từ chợ đầu mối, tiếng máy rao hàng, tiếng còi xe, tiếng người chào hỏi luyên thuyên… làm huyên náo cả một vùng quê.',
+          
+          'Ở quê người ta họp chợ sớm. Họ bắt đầu lúc hừng đông chưa ló dạng, không thấy rõ mặt người và kết thúc khi ông trời vừa bừng tỉnh dậy. Ai ở thành phố về quen giấc ngủ đến 7, 8 giờ thì xác định ôm bụng đói mà chạy ra chợ lớn mới có đồ ăn.',
+          
+          'Thấm thoát đã hết ngày về phép, tôi lại tất bật chuẩn bị để trở lại với cuộc sống cơm áo gạo tiền nơi đất khách. Ở đó phát triển hơn, có đầy đủ mọi thứ nhưng tìm mãi vẫn không thấy được một thoáng hương quê. Thế nên sau này mỗi khi có dịp về quê, tôi lại cố tình dậy sớm để hòa vào nhịp sống đồng bằng, cảm nhận khí trời mát mẻ của buổi bình minh và thả mình vào không gian đầy ồn ào trong buổi trà đạo của các ông, các bà.',
+          
+          '"Người bỏ quê hương, chứ bao giờ quê hương bỏ người". Thời đại nhà nhà tân tiến, người người hướng đến giá trị văn minh, những người trẻ mang trong mình hoài bão lớn lao, ai cũng mong muốn được thoát xác, đi đến những chân trời mới lạ để định vị bản thân. Có khi bị cuống vào vòng quay của hào nhoáng, xa hoa, ta trót lỡ đôi lần không còn nhớ đến nơi chôn rau cắt rốn. Nhưng chỉ có người bỏ đất, chứ đất bỏ người sao được. Nhà vẫn ở đấy, đợi ta quay về mỗi khi mỏi mệt.'
+        ]
       }
     ];
 
-    // ===== KHỞI TẠO =====
-    let currentFilter = 'all';
-    let searchTerm = '';
+    let currentFilter = 'all', searchTerm = '';
 
     function renderFilters() {
-      const container = document.getElementById('filter-container');
-      container.innerHTML = '';
-      Object.entries(categories).forEach(([key, val]) => {
-        const btn = document.createElement('button');
-        btn.className = `filter-btn ${currentFilter === key ? 'active' : ''}`;
-        btn.dataset.filter = key;
-        btn.textContent = val.label;
-        btn.onclick = () => { currentFilter = key; renderAll(); };
-        container.appendChild(btn);
+      const c = document.getElementById('filter-container');
+      c.innerHTML = '';
+      Object.entries(categories).forEach(([k, v]) => {
+        const b = document.createElement('button');
+        b.className = `filter-btn ${currentFilter === k ? 'active' : ''}`;
+        b.textContent = v;
+        b.onclick = () => { currentFilter = k; renderPosts(); };
+        c.appendChild(b);
       });
     }
 
     function renderPosts() {
-      const container = document.getElementById('posts-container');
-      container.innerHTML = '';
-      
-      let filtered = posts.filter(p => {
-        const matchCat = currentFilter === 'all' || p.cat === currentFilter;
-        const text = `${p.title} ${p.excerpt} ${p.full}`.toLowerCase();
-        const matchSearch = searchTerm === '' || text.includes(searchTerm.toLowerCase());
-        return matchCat && matchSearch;
+      const c = document.getElementById('posts-container');
+      c.innerHTML = '';
+      const filtered = posts.filter(p => {
+        const mCat = currentFilter === 'all' || p.cat === currentFilter;
+        const mSearch = searchTerm === '' || 
+          (p.title + p.excerpt + p.paragraphs.join(' ')).toLowerCase().includes(searchTerm.toLowerCase());
+        return mCat && mSearch;
       });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<p class="empty-state">Chưa có bài viết nào phù hợp.</p>';
+      if (!filtered.length) {
+        c.innerHTML = '<p style="text-align:center;color:#888;padding:40px;">Không tìm thấy bài viết</p>';
         return;
       }
-
-      filtered.forEach(post => {
-        const card = document.createElement('article');
-        card.className = `post-card ${post.featured ? 'featured' : ''}`;
-        
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'post-card';
+        const fullHtml = p.paragraphs.map(t => `<p>${t}</p>`).join('');
         card.innerHTML = `
-          ${post.image ? `<img src="${post.image}" alt="${post.title}" class="post-image show">` : ''}
-          <h2 class="post-title">${post.title}</h2>
-          <p class="post-meta">${post.date} · ${post.read}</p>
-          <p class="post-excerpt">${post.excerpt}</p>
+          <h2 class="post-title">${p.title}</h2>
+          <p class="post-meta">${p.date} · ${p.read}</p>
+          <p class="post-excerpt">${p.excerpt}</p>
           <button class="read-more">Đọc tiếp →</button>
-          <div class="post-full">${post.full}</div>
+          <div class="post-full">${fullHtml}</div>
         `;
-        
+        let show = false;
         const btn = card.querySelector('.read-more');
-        const full = card.querySelector('.post-full');
-        let expanded = false;
+        const div = card.querySelector('.post-full');
         btn.onclick = () => {
-          expanded = !expanded;
-          full.classList.toggle('show', expanded);
-          btn.textContent = expanded ? 'Thu gọn ↑' : 'Đọc tiếp →';
+          show = !show;
+          div.classList.toggle('show', show);
+          btn.textContent = show ? 'Thu gọn ↑' : 'Đọc tiếp →';
         };
-        
-        container.appendChild(card);
+        c.appendChild(card);
       });
     }
 
-    function renderAll() {
-      renderFilters();
-      renderPosts();
-    }
-
-    document.getElementById('search-input').addEventListener('input', e => {
+    document.getElementById('search-input').oninput = e => {
       searchTerm = e.target.value;
       renderPosts();
-    });
+    };
 
-    renderAll();
+    renderFilters();
+    renderPosts();
   </script>
 </body>
 </html>
